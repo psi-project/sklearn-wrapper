@@ -90,11 +90,11 @@ class rank:
 	def POST(self):
 		params, data = train.split_params(web.data())
 		#Formulate data['source'] and data['target'] in some sensible way; this way could work, but is not sensible
-		source = data['first'] + data['second']
-		target = [1] * len(data['first']) + [-1] * len(data['second'])  
-		model = train.train(LogisticRegression, params, { 'source' : source, 'target' : target})
+		source = data['preferred'] + data['not_preferred']
+		target = [1] * len(data['preferred']) + [-1] * len(data['not_preferred'])  
+		model, c = train.train(LogisticRegression, params, { 'source' : source, 'target' : target})
 		model.predictProb = True
-		return train.persist_model(model)
+		return train.persist_model(model, c)
 
 class train:
 	def POST(self, moduleName, learnerName):
