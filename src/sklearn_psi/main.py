@@ -126,8 +126,11 @@ class train:
 			pred.fit(data['source'], model.labelsToInt(data['target']) if model.hasLabels() else data['target'])
 		else:
 			pred.fit( data['source'] )
-			if pred.predict_proba: #scikit learn predictors don't appear to report this information, so predict on one to infer
-				clusters = len( pred.predict_proba( [ data['source'][0] ] )[0] ) 
+			#An incomplete list of the ways to discover, after training, how many clusters a scikit-learn clustering algorithm has identified
+			if hasattr(pred, 'predict_proba'):
+				clusters = len( pred.predict_proba( [ data['source'][0] ] )[0] )
+			elif hasattr(pred, 'cluster_centers_'):
+				clusters = len(pred.cluster_centers_) 
 		return model, clusters
 	
 	@classmethod
